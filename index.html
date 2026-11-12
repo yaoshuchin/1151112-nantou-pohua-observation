@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>南投國中情緒調節課程公開課表分析 | 石伯華老師教學演示成果</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Noto Sans TC', sans-serif; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-8px); }
+      40%, 80% { transform: translateX(8px); }
+    }
+    .shake-animation {
+      animation: shake 0.4s ease-in-out;
+    }
+    @media print {
+      #auth-overlay, #navbar, #lock-btn, #export-btn-group { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .glass-card { border: 1px solid #cbd5e1 !important; box-shadow: none !important; }
+      .break-inside-avoid { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-slate-50 via-teal-50/30 to-blue-50/40 text-slate-800 min-h-screen">
+
+  <!-- ================= PASSWORD AUTH OVERLAY ================= -->
+  <div id="auth-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-md transition-opacity duration-500">
+    <div id="auth-box" class="w-full max-w-md mx-4 bg-white/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/50 text-center relative overflow-hidden">
+      <div class="w-16 h-16 mx-auto mb-4 bg-teal-500/10 text-teal-600 rounded-2xl flex items-center justify-center shadow-inner">
+        <i data-lucide="lock" class="w-8 h-8"></i>
+      </div>
+      <span class="inline-block px-3 py-1 text-xs font-semibold tracking-wider text-teal-700 uppercase bg-teal-100 rounded-full mb-3">南投國中 公開課評量系統</span>
+      <h2 class="text-2xl font-black text-slate-800 mb-1">公開觀課資料分析</h2>
+      <p class="text-sm text-slate-500 mb-6">情緒調節課程（SEL）教學演示成果<br>請輸入存取密碼以解鎖儀表板</p>
+
+      <form id="auth-form" onsubmit="handleAuth(event)" class="space-y-4">
+        <div class="relative">
+          <input 
+            type="password" 
+            id="password-input" 
+            maxlength="10" 
+            autocomplete="off"
+            placeholder="請輸入訪問密碼" 
+            class="w-full text-center text-2xl tracking-[0.3em] font-mono py-3 px-4 rounded-xl border border-slate-300 focus:outline-none focus:ring-4 focus:ring-teal-500/30 focus:border-teal-500 transition duration-200"
+            required
+            autofocus
+          />
+        </div>
+        <p id="error-msg" class="text-rose-500 text-sm hidden font-medium flex items-center justify-center gap-1">
+          <i data-lucide="alert-circle" class="w-4 h-4"></i> 密碼錯誤，請重新輸入！
+        </p>
+        <button 
+          type="submit" 
+          class="w-full py-3.5 px-6 bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white font-bold rounded-xl shadow-lg shadow-teal-600/30 transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+        >
+          <span>驗證並進入系統</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+      <div class="mt-6 pt-4 border-t border-slate-100 text-xs text-slate-400">
+        南投縣立南投國民中學 綜合活動領域輔導科
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <nav id="navbar" class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold uppercase tracking-wider text-teal-600">南投國中 115學年度</span>
+          <h1 class="text-base sm:text-lg font-bold text-slate-800 leading-tight">情緒調節課程 公開課評量分析</h1>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="#overview" class="hidden md:inline-block text-sm text-slate-600 hover:text-teal-600 font-medium px-3 py-1.5 rounded-lg hover:bg-slate-100/70 transition">總覽統計</a>
+        <a href="#charts" class="hidden md:inline-block text-sm text-slate-600 hover:text-teal-600 font-medium px-3 py-1.5 rounded-lg hover:bg-slate-100/70 transition">向度圖表</a>
+        <a href="#teachers" class="hidden md:inline-block text-sm text-slate-600 hover:text-teal-600 font-medium px-3 py-1.5 rounded-lg hover:bg-slate-100/70 transition">觀課教師明細</a>
+        <a href="#insights" class="hidden md:inline-block text-sm text-slate-600 hover:text-teal-600 font-medium px-3 py-1.5 rounded-lg hover:bg-slate-100/70 transition">質性省思</a>
+        <button onclick="lockPage()" id="lock-btn" title="鎖定系統" class="p-2 text-slate-500 hover:text-teal-600 hover:bg-teal-50 rounded-xl transition border border-slate-200">
+          <i data-lucide="lock" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ================= MAIN CONTENT CONTAINER ================= -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- HERO / BANNER -->
+    <header class="glass-card rounded-3xl p-6 sm:p-8 shadow-sm relative overflow-hidden border border-slate-200/80">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-teal-400/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-16 -bottom-16 w-64 h-64 bg-cyan-400/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-3">
+            <span class="px-3 py-1 text-xs font-semibold text-teal-800 bg-teal-100/80 rounded-full border border-teal-200">公開觀課評鑑成果</span>
+            <span class="px-3 py-1 text-xs font-semibold text-cyan-800 bg-cyan-100/80 rounded-full border border-cyan-200">八年級（國二）</span>
+            <span class="px-3 py-1 text-xs font-semibold text-purple-800 bg-purple-100/80 rounded-full border border-purple-200">SEL 社會情緒學習</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
+            綜合活動領域輔導科：情緒調節單元
+          </h2>
+          <p class="text-slate-600 mt-2 text-sm sm:text-base leading-relaxed max-w-3xl">
+            本分析報告彙整南投國中 115 年 10 月 30 日第七節（15:05～15:50）實習教師 <strong class="text-slate-900 font-semibold">石伯華</strong> 老師之教學演示評量表，匯集 13 位專業教師之觀課評鑑與質性回饋。
+          </p>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div id="export-btn-group" class="flex flex-wrap sm:flex-nowrap gap-3 shrink-0">
+          <button onclick="downloadCSV()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold border border-slate-300 shadow-sm transition">
+            <i data-lucide="download" class="w-4 h-4 text-teal-600"></i>
+            <span>下載 CSV 總表</span>
+          </button>
+          <button onclick="window.print()" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold shadow-md shadow-teal-600/20 transition">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>列印／存為 PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TEACHER INFO TILES -->
+      <div class="mt-6 pt-6 border-t border-slate-200/60 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs sm:text-sm">
+        <div class="bg-white/60 p-3 rounded-2xl border border-slate-100">
+          <div class="text-slate-400 font-medium">教學演示者</div>
+          <div class="text-slate-900 font-bold text-base mt-0.5">石伯華 老師</div>
+        </div>
+        <div class="bg-white/60 p-3 rounded-2xl border border-slate-100">
+          <div class="text-slate-400 font-medium">演示時間與地點</div>
+          <div class="text-slate-900 font-bold text-base mt-0.5">115/10/30 第七節</div>
+        </div>
+        <div class="bg-white/60 p-3 rounded-2xl border border-slate-100">
+          <div class="text-slate-400 font-medium">觀課教師陣容</div>
+          <div class="text-slate-900 font-bold text-base mt-0.5">13 位專業師資</div>
+        </div>
+        <div class="bg-white/60 p-3 rounded-2xl border border-slate-100">
+          <div class="text-slate-400 font-medium">綜合表現評級</div>
+          <div class="text-emerald-600 font-bold text-base mt-0.5">95.6% 優良卓越</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ================= SECTION 1: KPI OVERVIEW ================= -->
+    <section id="overview" class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-6 bg-teal-600 rounded-full"></div>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-800">全方位指標評鑑量化數據</h3>
+        </div>
+        <span class="text-xs text-slate-400">總計 13 位教師 × 14 項指標 = 182 評量次數</span>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- KPI 1 -->
+        <div class="glass-card p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:border-teal-500/50 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500">優良等第（項次）</span>
+            <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center">
+              <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl font-black text-slate-900">174</span>
+            <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">95.6%</span>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">最高等第肯定，表現卓越</p>
+        </div>
+
+        <!-- KPI 2 -->
+        <div class="glass-card p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:border-teal-500/50 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500">通過等第（項次）</span>
+            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+              <i data-lucide="badge-check" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl font-black text-slate-900">8</span>
+            <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">4.4%</span>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">達到教學演示合格標準</p>
+        </div>
+
+        <!-- KPI 3 -->
+        <div class="glass-card p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:border-teal-500/50 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500">待改進（項次）</span>
+            <div class="w-8 h-8 rounded-lg bg-slate-100 text-slate-400 flex items-center justify-center">
+              <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl font-black text-slate-900">0</span>
+            <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">0.0%</span>
+          </div>
+          <p class="mt-1 text-xs text-emerald-600 font-medium">全項達標，無待改進項目</p>
+        </div>
+
+        <!-- KPI 4 -->
+        <div class="glass-card p-5 rounded-2xl shadow-sm border border-slate-200/80 hover:border-teal-500/50 transition">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-500">觀課教師完成率</span>
+            <div class="w-8 h-8 rounded-lg bg-teal-100 text-teal-600 flex items-center justify-center">
+              <i data-lucide="users" class="w-4 h-4"></i>
+            </div>
+          </div>
+          <div class="mt-3 flex items-baseline gap-2">
+            <span class="text-3xl font-black text-slate-900">13</span>
+            <span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full">100% 回收</span>
+          </div>
+          <p class="mt-1 text-xs text-slate-400">校內外專家與跨領域回饋</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 2: CHARTS & VISUALIZATIONS ================= -->
+    <section id="charts" class="space-y-4">
+      <div class="flex items-center gap-2">
+        <div class="w-2.5 h-6 bg-cyan-600 rounded-full"></div>
+        <h3 class="text-lg sm:text-xl font-bold text-slate-800">視覺化圖表與向度分析</h3>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- CHART 1: RATING DISTRIBUTION -->
+        <div class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                <i data-lucide="pie-chart" class="w-4 h-4 text-teal-600"></i>
+                總體等第評量分佈
+              </h4>
+              <span class="text-xs font-medium text-slate-400">182 項次</span>
+            </div>
+            <div class="relative w-48 h-48 mx-auto my-3">
+              <canvas id="ratingDoughnutChart"></canvas>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100 flex justify-around text-center text-xs">
+            <div>
+              <span class="inline-block w-3 h-3 rounded-full bg-teal-500 mr-1"></span>
+              <span class="text-slate-600">優良 (95.6%)</span>
+            </div>
+            <div>
+              <span class="inline-block w-3 h-3 rounded-full bg-cyan-400 mr-1"></span>
+              <span class="text-slate-600">通過 (4.4%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHART 2: DOMAIN PERFORMANCE RADAR -->
+        <div class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                <i data-lucide="activity" class="w-4 h-4 text-cyan-600"></i>
+                四大專業向度優良達成率
+              </h4>
+              <span class="text-xs font-medium text-teal-600 bg-teal-50 px-2 py-0.5 rounded-full font-mono">百分比</span>
+            </div>
+            <div class="relative w-full h-56 mx-auto">
+              <canvas id="domainRadarChart"></canvas>
+            </div>
+          </div>
+          <div class="mt-2 text-xs text-slate-500 text-center">
+            A-1 (94.9%) ｜ A-2 (96.2%) ｜ A-3 (94.9%) ｜ B-2 (92.3%)
+          </div>
+        </div>
+
+        <!-- CHART 3: OBSERVER COMPOSITION -->
+        <div class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+                <i data-lucide="award" class="w-4 h-4 text-indigo-600"></i>
+                觀課教師身分結構
+              </h4>
+              <span class="text-xs font-medium text-slate-400">13 位教師</span>
+            </div>
+            <div class="relative w-48 h-48 mx-auto my-3">
+              <canvas id="rolePieChart"></canvas>
+            </div>
+          </div>
+          <div class="mt-4 pt-4 border-t border-slate-100 grid grid-cols-2 gap-2 text-xs text-slate-600">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-indigo-500"></span>跨領域教師 (7人)</div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-teal-500"></span>實習輔導教師 (3人)</div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>本科領域教師 (2人)</div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>實習指導教師 (1人)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHART 4: 14 INDICATORS BAR CHART -->
+      <div class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200/80">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+          <h4 class="font-bold text-slate-800 text-base flex items-center gap-2">
+            <i data-lucide="bar-chart-3" class="w-4 h-4 text-teal-600"></i>
+            14 項核心教學評量指標細項統計
+          </h4>
+          <span class="text-xs text-slate-400">深色長條表示評定為「優良」之教師人數（滿分 13 位）</span>
+        </div>
+        <div class="relative w-full h-80">
+          <canvas id="indicatorBarChart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 3: QUALITATIVE HIGHLIGHTS & REFLECTION ================= -->
+    <section id="insights" class="space-y-6">
+      <div class="flex items-center gap-2">
+        <div class="w-2.5 h-6 bg-purple-600 rounded-full"></div>
+        <h3 class="text-lg sm:text-xl font-bold text-slate-800">質性觀課亮點與精進對策（教學省思）</h3>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- HIGHLIGHTS -->
+        <div class="glass-card p-6 rounded-3xl shadow-sm border border-emerald-100 bg-gradient-to-br from-white via-emerald-50/20 to-teal-50/30">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+              <i data-lucide="thumbs-up" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 text-base">觀課教師高度肯定之亮點</h4>
+              <p class="text-xs text-slate-500">統整 13 位觀課教師具體事實描述</p>
+            </div>
+          </div>
+          <ul class="space-y-3.5 text-xs sm:text-sm text-slate-700">
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">1</span>
+              <div><strong class="text-slate-900">SEL 概念生活化與情境引導：</strong>課程緊扣國二生常見生活壓力，討論題目貼近學生身心經驗，能引起高度動機與討論熱度。</div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">2</span>
+              <div><strong class="text-slate-900">身心調適實作融入（深呼吸＋冷靜音樂）：</strong>帶領呼吸法時搭配背景情境音樂，有效落實「暫時性登出／身心調適」實務技巧。</div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">3</span>
+              <div><strong class="text-slate-900">自製小組加分板激發合作學習：</strong>以加分板代替負向管教，建立「有討論才加分、舉手方能發言」的正面團體規約。</div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">4</span>
+              <div><strong class="text-slate-900">和藹穩健台風與巡迴指導：</strong>口齒清晰、講話速度合宜，在小組討論時積極走動關懷各組，能適時追問並肯定學生發言。</div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- IMPROVEMENT SUGGESTIONS -->
+        <div class="glass-card p-6 rounded-3xl shadow-sm border border-amber-100 bg-gradient-to-br from-white via-amber-50/20 to-orange-50/20">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+              <i data-lucide="trending-up" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-900 text-base">觀課建議與教學省思改進對策</h4>
+              <p class="text-xs text-slate-500">供實習檔案成果冊與後續授課精進參考</p>
+            </div>
+          </div>
+          <ul class="space-y-3.5 text-xs sm:text-sm text-slate-700">
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">1</span>
+              <div><strong class="text-slate-900">深化學生發表後的點評回饋：</strong>在學生上台發表後，點評內容可更具體豐富，重述學生金句並連結情緒調節概念。</div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">2</span>
+              <div><strong class="text-slate-900">活動過渡銜接與課末板書統整：</strong>在體驗活動切換至情境題時預留過渡提示，並於課末多花 2-3 分鐘加強重點板書歸納。</div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">3</span>
+              <div><strong class="text-slate-900">均衡各組發言人數與回饋熱度：</strong>採用抽籤或棒次輪流制，讓每組較內向之同學亦有代表發言與獲得成就感之機會。</div>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="w-5 h-5 rounded-full bg-amber-500/15 text-amber-700 flex items-center justify-center shrink-0 mt-0.5 text-xs font-bold">4</span>
+              <div><strong class="text-slate-900">情境題目背景多視角探討：</strong>遇到學生解讀不同時，引導全班從「當事人 vs 旁觀者」多重視角解析情緒反應。</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SECTION 4: INTERACTIVE TEACHER EVALUATION TABLE ================= -->
+    <section id="teachers" class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-6 bg-indigo-600 rounded-full"></div>
+          <h3 class="text-lg sm:text-xl font-bold text-slate-800">13 位觀課教師評量全紀錄檢索</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="relative">
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            <input 
+              type="text" 
+              id="search-input" 
+              oninput="filterTeachers()"
+              placeholder="搜尋教師姓名或身分..." 
+              class="text-xs sm:text-sm pl-9 pr-3 py-2 rounded-xl border border-slate-200 bg-white/80 focus:outline-none focus:ring-2 focus:ring-teal-500/30 focus:border-teal-500 transition w-48 sm:w-64"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- TEACHERS CARDS / TABLE -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="teachers-container">
+        <!-- Rendered by JavaScript -->
+      </div>
+    </section>
+
+    <!-- MODAL FOR TEACHER DETAIL -->
+    <div id="detail-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+      <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-slate-100 space-y-4">
+        <div class="flex items-start justify-between border-b pb-4">
+          <div>
+            <span id="modal-role" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-teal-100 text-teal-800">身分</span>
+            <h3 id="modal-name" class="text-2xl font-bold text-slate-900 mt-1">教師姓名</h3>
+          </div>
+          <button onclick="closeModal()" class="p-2 text-slate-400 hover:text-slate-600 rounded-xl hover:bg-slate-100 transition">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          <div>
+            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">14 項指標評核概況</h5>
+            <div id="modal-indicators" class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-2 text-xs"></div>
+          </div>
+
+          <div>
+            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">具體事實描述</h5>
+            <div id="modal-facts" class="mt-1 p-3.5 bg-slate-50 rounded-2xl text-xs sm:text-sm text-slate-700 leading-relaxed border border-slate-200/60"></div>
+          </div>
+
+          <div>
+            <h5 class="text-xs font-bold text-slate-400 uppercase tracking-wider">綜合評述與精進反饋</h5>
+            <div id="modal-summary" class="mt-1 p-3.5 bg-teal-50/50 rounded-2xl text-xs sm:text-sm text-slate-800 leading-relaxed border border-teal-100"></div>
+          </div>
+        </div>
+
+        <div class="pt-2 text-right">
+          <button onclick="closeModal()" class="px-5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition">關閉</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="mt-16 border-t border-slate-200/80 bg-white/60 py-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 space-y-1">
+      <p class="font-semibold text-slate-700">南投縣立南投國民中學 115 學年度公開授課與教學演示紀錄</p>
+      <p>任教領域：綜合活動領域輔導科 ｜ 演示教師：石伯華 實習教師 ｜ 系統密碼防護已啟用</p>
+    </div>
+  </footer>
+
+  <!-- ================= DATA & APPLICATION SCRIPT ================= -->
+  <script>
+    // Authentic password
+    const CORRECT_PASSWORD = "049";
+
+    // Teacher Evaluation Data (13 sheets from PDF)
+    const teachersData = [
+      {
+        id: 1,
+        name: "許正儀",
+        role: "實習輔導教師 / 不同領域(校內)",
+        roleCategory: "輔導教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "1. 問答、引導略；\n2. 應用學習單鞏固重點；\n3. 實施加分制激勵；\n4. 小組實作、分享、討論落實。\n複習上次重點，結合問答、競賽、正向鼓勵；分組競賽、加分機制營造良好支持氛圍。",
+        summary: "教學節奏明快，善用小組競賽與加分機制，全項評為優良。"
+      },
+      {
+        id: 2,
+        name: "簡子閔",
+        role: "相同領域 / 不同領域(校內)",
+        roleCategory: "本科教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】課程主軸圍繞如何讓心情舒緩、排解壓力進行活動設計。\n【A-2】運用情境測量題目使同學進行討論練習，並有效互動及提出各組不同看法，調整每個人自我調適之效果。\n【A-3】排解壓力時各組以加分方式使同學發言，促成生生互動性學習。\n【B-2】同學有答覆較不適切答案時，同組同學主動協助修正，使達成更佳學習效果。",
+        summary: "課程排訂適切，課間互動狀況良好，分組討論能使學生深刻體會重點。"
+      },
+      {
+        id: 3,
+        name: "陳燦翔",
+        role: "實習指導教師 (校外專家教授)",
+        roleCategory: "指導教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】熟悉課程單元內容，能依教學設計落實實施。\n【A-2】教學風格能吸引學生投入學習，能運用生動的描述與肢體語言。落實分組合作學習，引導學生討論並巡迴至各組給予個別指導。\n【A-3】能以多元方式進行教學評量（活動評量、實作評量、口頭報告評量），能給予適當口頭評量與積極鼓勵。\n【B-2】能運用適當的班級經營方法（熟悉學生座位安排、小組加分機制）。",
+        summary: "口齒清晰、教學風格和藹，能吸引學生高度投入。能完整進行單元教學。鼓勵持續精進教學細節、累積寶貴經驗。"
+      },
+      {
+        id: 4,
+        name: "張家瑋",
+        role: "相同領域(校內)",
+        roleCategory: "本科教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】善用學習單與小組加分板。\n【A-2】引導全班請學生一起唸出重點；挑選生活化的具體事件引發學生熱烈討論。\n【A-3】促進學生口語表達、踴躍舉手發言，利用小組加分板顯著增強發言動機。",
+        summary: "教學過程流暢，有完整上完一個完整的單元課程。"
+      },
+      {
+        id: 5,
+        name: "李協融",
+        role: "不同領域(校內)",
+        roleCategory: "跨領域教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "全數指標皆予以最高等第「優良」肯定，課堂掌握度成熟。",
+        summary: "整體教學架構與常規管理良好，全項滿分評定。"
+      },
+      {
+        id: 6,
+        name: "黃瓊慧",
+        role: "實習輔導教師",
+        roleCategory: "輔導教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】教材適切且豐富有趣。\n【A-2】1. 討論事件與生活實例相近，貼近學生生活經驗；2. 活動內容有趣，能銜接流暢更好喔！3. 能以口頭讚美聲音策略鼓勵學生學習；4. 活動後之歸納可多練習！！\n【A-3】能設計符合課程之學習單，使學生了解情緒管理技巧之差異與方法。\n【B-2】分組教學用心，以鼓勵代替懲罰。",
+        summary: "1. 課程設計和教學技巧大致良好！\n2. 課程流暢度宜多留意。\n3. 與同學互動良好，班級氛圍非常正向！"
+      },
+      {
+        id: 7,
+        name: "游雅雯",
+        role: "不同領域(校內) / 第三方教師",
+        roleCategory: "跨領域教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】1. 有完整教學計畫；2. 設計結構化學習單；3. 簡報呈現精美清晰。\n【A-2】1. 學生舉手回答（踴躍發言）；2. 呼吸法指導配合冷靜音樂；3. 生活情境深入引導。\n【A-3】1. 呼吸法帶領落實；2. 抓學習單練習。\n【B-2】鼓勵學生發言，並能進一步追問想法及感受。",
+        summary: "1. 台風穩重、速度合宜、講話清晰。\n2. 學生多數積極投入課程且能深入理解。"
+      },
+      {
+        id: 8,
+        name: "曾怡芳",
+        role: "不同領域(校內)",
+        roleCategory: "跨領域教師",
+        excellentCount: 13,
+        passCount: 1,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"通過","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】情緒調節主題生動、口頭與學習單並行。\n【A-2】情境有趣、呼應生活常用、情境很合宜。第三組在討論情境時有所誤解，經老師耐心引導後釐清。\n【A-3】學習單、口頭發表。學習單(發表回饋)回饋的內容可再更具體、豐富。\n【備註】第七節 15:05-15:50；第6組要+1分，剛忘記。",
+        summary: "教學情境選材非常成功，建議在學生分組發表後，教師給予的回饋點評能再更加具體且豐富。"
+      },
+      {
+        id: 9,
+        name: "林育銘",
+        role: "實習輔導教師 / 不同領域(校內)",
+        roleCategory: "輔導教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "全項指標給予「優良」肯定，備課與教學展現高度專業度。",
+        summary: "1. 台風穩健、口條流暢。\n2. 用心準備課程及充分演練。\n3. 【精進建議】分組教學時，儘量均勻各組得答人數，增加全班回饋熱度。"
+      },
+      {
+        id: 10,
+        name: "曾俋婷",
+        role: "不同領域(校內)",
+        roleCategory: "跨領域教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】1. 暖身、課程呈現、情境教學，設計非常完整；2. 分組練習題目適切國中生生活經驗。\n【A-2】1. 具備專業知識，呈現時稍緊張，但口語表達及語速仍可圈可點；2. 適時引導並提供正確觀念和解方。\n【A-3】1. 討論與發表；2. 提醒要討論才加分，透過討論更了解課程內涵；3. 報告內容能及時反饋。\n【B-2】1. 建立一定要舉手才有發言權，有效控管課堂秩序；2. 座位安排便於學生看清螢幕並與老師交流。",
+        summary: "1. 上課氛圍輕鬆，師生互動良好、學生積極參與。\n2. 時間控管得宜。\n3. 教師精神飽滿、氣場良好。"
+      },
+      {
+        id: 11,
+        name: "蔡惠玲",
+        role: "不同領域(校內)",
+        roleCategory: "跨領域教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】教學目標明確，流程完整，主題生活化，貼近國中生的情緒經驗。\n【A-2】適度運用開放式提問，引導學生說出自己的想法，增加學生的參與感，教學節奏佳。\n【A-3】能適時設計討論題目，引導各組學生進行交流與思考。能適時給予鼓勵與引導，課堂互動佳。\n【B-2】有小組加分版，製作精美，可作為班級經營及學習激勵工具。",
+        summary: "教學態度認真，能掌握課程主題，並運用生活化情境及多媒體教材引起學生學習動機。教學過程中能適時設計分組討論題，引導學生思考與交流，各組學生均能積極投入，討論情形良好。教師也能適時給予鼓勵，營造正向且良好的學習氛圍。最後領導學生做整堂課的總結及複習。"
+      },
+      {
+        id: 12,
+        name: "姚述勤",
+        role: "不同領域(校內)",
+        roleCategory: "跨領域教師",
+        excellentCount: 14,
+        passCount: 0,
+        ratings: {"A-1-1":"優良","A-1-2":"優良","A-1-3":"優良","A-2-1":"優良","A-2-2":"優良","A-2-3":"優良","A-2-4":"優良","A-2-5":"優良","A-2-6":"優良","A-3-1":"優良","A-3-2":"優良","A-3-3":"優良","B-2-1":"優良","B-2-2":"優良"},
+        facts: "【A-1】多元教材教學及評量應用，善於引導同學。\n【A-2】多元教材引導學生，對於學生答案能給予溫暖回應，課堂時間掌控完美。\n【A-3】從同學的反饋中引導學生思考及正確溝通。\n【B-2】善於營造學習情境，並善利用加分板給予鼓勵，各組均有加分。",
+        summary: "石老師善於引導，課堂氣氛佳，並在小組討論時積極走動關心，充分了解各組狀況。"
+      },
+      {
+        id: 13,
+        name: "古士傑",
+        role: "不同領域(校內)",
+        roleCategory: "跨領域教師",
+        excellentCount: 7,
+        passCount: 7,
+        ratings: {"A-1-1":"優良","A-1-2":"通過","A-1-3":"通過","A-2-1":"優良","A-2-2":"通過","A-2-3":"優良","A-2-4":"優良","A-2-5":"通過","A-2-6":"優良","A-3-1":"優良","A-3-2":"通過","A-3-3":"優良","B-2-1":"通過","B-2-2":"通過"},
+        facts: "【A-1】SEL情緒學習結合生活中的案例，讓學生直覺做情緒描述和練習轉換。\n【A-2】能給予不同學生案例做回饋。善用加分學習單並讓學生上台分享。\n【A-3】學習單、小組討論、上台發表，都給予積極回饋。\n【B-2】學生回饋正向熱烈。",
+        summary: "上課秩序良好，符合教室經營發展4, 7, 8，落實「暫時性登出」的實務技巧，符合教學目標。"
+      }
+    ];
+
+    const indicatorNames = {
+      'A-1-1': '依課綱與目標研擬教學計畫',
+      'A-1-2': '選擇適切教材與教學方法',
+      'A-1-3': '設計多元適切評量方式',
+      'A-2-1': '熟悉任教科專門知識',
+      'A-2-2': '引起學生學習動機興趣',
+      'A-2-3': '教學流暢性與邏輯性',
+      'A-2-4': '適時歸納與引導重點',
+      'A-2-5': '善用教學策略與媒材科技',
+      'A-2-6': '符合生活經驗多樣活動',
+      'A-3-1': '多元評量了解學習狀況',
+      'A-3-2': '檢討結果並適度回饋指導',
+      'A-3-3': '運用評量結果檢討反思',
+      'B-2-1': '規劃空間與正向氛圍',
+      'B-2-2': '制訂與維護班級團體規約'
+    };
+
+    // ================= PASSWORD GATE LOGIC =================
+    function checkAuthOnLoad() {
+      if (sessionStorage.getItem('nantou_pohua_auth') === 'true') {
+        unlockDashboard(false);
+      }
+    }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      const input = document.getElementById('password-input').value.trim();
+      const errorMsg = document.getElementById('error-msg');
+      const authBox = document.getElementById('auth-box');
+
+      if (input === CORRECT_PASSWORD) {
+        errorMsg.classList.add('hidden');
+        sessionStorage.setItem('nantou_pohua_auth', 'true');
+        unlockDashboard(true);
+      } else {
+        errorMsg.classList.remove('hidden');
+        authBox.classList.remove('shake-animation');
+        void authBox.offsetWidth; // trigger reflow
+        authBox.classList.add('shake-animation');
+        document.getElementById('password-input').value = '';
+        document.getElementById('password-input').focus();
+      }
+    }
+
+    function unlockDashboard(animate) {
+      const overlay = document.getElementById('auth-overlay');
+      if (animate) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(() => overlay.remove(), 500);
+      } else {
+        overlay.remove();
+      }
+      initCharts();
+      renderTeachers();
+    }
+
+    function lockPage() {
+      sessionStorage.removeItem('nantou_pohua_auth');
+      window.location.reload();
+    }
+
+    // ================= CHARTS INITIALIZATION =================
+    let chartsInitialized = false;
+    function initCharts() {
+      if (chartsInitialized) return;
+      chartsInitialized = true;
+
+      // 1. Doughnut Chart (Total Ratings)
+      new Chart(document.getElementById('ratingDoughnutChart'), {
+        type: 'doughnut',
+        data: {
+          labels: ['優良 (174)', '通過 (8)'],
+          datasets: [{
+            data: [174, 8],
+            backgroundColor: ['#0d9488', '#22d3ee'],
+            hoverBackgroundColor: ['#0f766e', '#06b6d4'],
+            borderWidth: 0,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '72%',
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  const val = ctx.raw;
+                  const pct = ((val / 182) * 100).toFixed(1);
+                  return ` ${ctx.label}: ${val} 項次 (${pct}%)`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      // 2. Radar Chart (Domains)
+      new Chart(document.getElementById('domainRadarChart'), {
+        type: 'radar',
+        data: {
+          labels: ['A-1 設計教學方案', 'A-2 教學重點技巧', 'A-3 學習評量實施', 'B-2 班級情境經營'],
+          datasets: [{
+            label: '優良率 (%)',
+            data: [94.9, 96.2, 94.9, 92.3],
+            backgroundColor: 'rgba(20, 184, 166, 0.2)',
+            borderColor: '#0d9488',
+            pointBackgroundColor: '#0d9488',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: '#0d9488',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              min: 80,
+              max: 100,
+              ticks: { stepSize: 5, font: { size: 10 } },
+              pointLabels: { font: { size: 11, weight: 'bold' } }
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      // 3. Observer Role Pie
+      new Chart(document.getElementById('rolePieChart'), {
+        type: 'pie',
+        data: {
+          labels: ['跨領域教師 (7)', '實習輔導教師 (3)', '本科領域教師 (2)', '實習指導教師 (1)'],
+          datasets: [{
+            data: [7, 3, 2, 1],
+            backgroundColor: ['#6366f1', '#14b8a6', '#f59e0b', '#10b981'],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      // 4. Indicator Horizontal Bar Chart
+      const indKeys = Object.keys(indicatorNames);
+      const indLabels = indKeys.map(k => `${k} ${indicatorNames[k]}`);
+      const indExcellentCounts = indKeys.map(k => {
+        return teachersData.filter(t => t.ratings[k] === '優良').length;
+      });
+      const indPassCounts = indKeys.map(k => {
+        return teachersData.filter(t => t.ratings[k] === '通過').length;
+      });
+
+      new Chart(document.getElementById('indicatorBarChart'), {
+        type: 'bar',
+        data: {
+          labels: indLabels,
+          datasets: [
+            {
+              label: '優良 (次數)',
+              data: indExcellentCounts,
+              backgroundColor: '#0d9488',
+              borderRadius: 6
+            },
+            {
+              label: '通過 (次數)',
+              data: indPassCounts,
+              backgroundColor: '#a5f3fc',
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              stacked: true,
+              max: 13,
+              ticks: { stepSize: 1, precision: 0 }
+            },
+            y: {
+              stacked: true,
+              ticks: { font: { size: 11 } }
+            }
+          },
+          plugins: {
+            legend: { position: 'top', align: 'end' },
+            tooltip: {
+              callbacks: {
+                footer: function(items) {
+                  return '總觀課教師：13 位';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // ================= TEACHER CARDS RENDERING =================
+    function renderTeachers(filterText = '') {
+      const container = document.getElementById('teachers-container');
+      const filtered = teachersData.filter(t => {
+        const text = `${t.name} ${t.role} ${t.facts} ${t.summary}`.toLowerCase();
+        return text.includes(filterText.toLowerCase());
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center text-slate-400">
+            <i data-lucide="inbox" class="w-12 h-12 mx-auto mb-2 opacity-50"></i>
+            <p>查無符合「${filterText}」的觀課教師資料</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map(t => {
+        const isAllExcellent = t.excellentCount === 14;
+        return `
+          <div class="glass-card rounded-2xl p-5 shadow-sm border border-slate-200/80 hover:shadow-md hover:border-teal-500/50 transition cursor-pointer flex flex-col justify-between" onclick="openModal(${t.id})">
+            <div>
+              <div class="flex items-start justify-between gap-2 mb-2">
+                <div>
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-full ${
+                    t.roleCategory === '指導教師' ? 'bg-purple-100 text-purple-700' :
+                    t.roleCategory === '輔導教師' ? 'bg-teal-100 text-teal-700' :
+                    t.roleCategory === '本科教師' ? 'bg-amber-100 text-amber-700' :
+                    'bg-blue-100 text-blue-700'
+                  }">${t.roleCategory}</span>
+                  <h4 class="text-lg font-bold text-slate-900 mt-1">${t.name} 老師</h4>
+                </div>
+                <div class="text-right">
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-full ${isAllExcellent ? 'bg-emerald-100 text-emerald-700' : 'bg-cyan-100 text-cyan-800'}">
+                    ${t.excellentCount} 優 / ${t.passCount} 通
+                  </span>
+                </div>
+              </div>
+              <p class="text-xs text-slate-500 font-medium mb-3">${t.role}</p>
+
+              <div class="bg-slate-50/70 p-3 rounded-xl border border-slate-100 text-xs text-slate-600 line-clamp-3 mb-3">
+                <span class="font-semibold text-slate-700">事實摘錄：</span>${t.facts.replace(/[\n\r]+/g, ' ')}
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-teal-600 font-semibold">
+              <span>檢視評量明細與評語</span>
+              <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function filterTeachers() {
+      const q = document.getElementById('search-input').value;
+      renderTeachers(q);
+    }
+
+    // ================= MODAL LOGIC =================
+    function openModal(teacherId) {
+      const t = teachersData.find(item => item.id === teacherId);
+      if (!t) return;
+
+      document.getElementById('modal-name').textContent = `${t.name} 老師 觀課評量表`;
+      document.getElementById('modal-role').textContent = t.role;
+      document.getElementById('modal-facts').textContent = t.facts;
+      document.getElementById('modal-summary').textContent = t.summary;
+
+      const indContainer = document.getElementById('modal-indicators');
+      indContainer.innerHTML = Object.keys(t.ratings).map(key => {
+        const rating = t.ratings[key];
+        const isEx = rating === '優良';
+        return `
+          <div class="p-2 rounded-lg border ${isEx ? 'bg-emerald-50/60 border-emerald-200 text-emerald-800' : 'bg-blue-50/60 border-blue-200 text-blue-800'} flex items-center justify-between">
+            <span class="font-mono font-bold">${key}</span>
+            <span class="font-bold">${rating}</span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
+    // Close modal on Escape or background click
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+    document.getElementById('detail-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'detail-modal') closeModal();
+    });
+
+    // ================= CSV DOWNLOAD =================
+    function downloadCSV() {
+      const headers = ['編號', '觀察者', '身分別', 'A-1-1', 'A-1-2', 'A-1-3', 'A-2-1', 'A-2-2', 'A-2-3', 'A-2-4', 'A-2-5', 'A-2-6', 'A-3-1', 'A-3-2', 'A-3-3', 'B-2-1', 'B-2-2', '具體事實描述', '綜合評述'];
+      let csv = '\uFEFF' + headers.join(',') + '\n';
+      teachersData.forEach(d => {
+        const row = [
+          d.id,
+          `"${d.name}"`,
+          `"${d.role}"`,
+          d.ratings['A-1-1'],
+          d.ratings['A-1-2'],
+          d.ratings['A-1-3'],
+          d.ratings['A-2-1'],
+          d.ratings['A-2-2'],
+          d.ratings['A-2-3'],
+          d.ratings['A-2-4'],
+          d.ratings['A-2-5'],
+          d.ratings['A-2-6'],
+          d.ratings['A-3-1'],
+          d.ratings['A-3-2'],
+          d.ratings['A-3-3'],
+          d.ratings['B-2-1'],
+          d.ratings['B-2-2'],
+          `"${d.facts.replace(/"/g, '""')}"`,
+          `"${d.summary.replace(/"/g, '""')}"`
+        ];
+        csv += row.join(',') + '\n';
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', '南投國中石伯華老師情緒調節公開觀課評量總表.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    // Run auth check on initialization
+    window.addEventListener('DOMContentLoaded', () => {
+      checkAuthOnLoad();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
